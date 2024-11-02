@@ -39,7 +39,7 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public PetDto updatePet(PetDto petDto) {
-        Pet pet = petRepository.findById(petDto.getId()).orElseThrow(() -> new PetServiceException("Pet not found"));
+        Pet pet;
         pet = petMapper.dtoToModel(petDto);
         pet = petRepository.save(pet);
         return petMapper.modelToDto(pet);
