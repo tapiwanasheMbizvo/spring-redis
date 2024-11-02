@@ -1,0 +1,31 @@
+<configuration xmlns="http://logback.qos.ch/schema/logback"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://logback.qos.ch/schema/logback http://logback.qos.ch/schema/logback/logback.xsd">
+    <!-- Console Appender with JSON Encoder -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+
+    <!-- File Appender with JSON Encoder -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/application.json</file>
+        <append>true</append>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+    </appender>
+
+    <!-- Root Logger -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+    <!-- Logger for your package -->
+    <logger name="com.tapiwa.demo.logging" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
+    </logger>
+
+    <!-- Reduce verbosity for Spring and Hibernate -->
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.hibernate" level="WARN"/>
+</configuration>
