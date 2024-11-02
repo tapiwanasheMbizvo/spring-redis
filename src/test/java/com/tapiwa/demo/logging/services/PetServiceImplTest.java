@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-class PetServiceTest {
+class PetServiceImplTest {
 
     @Mock
     private PetRepository petRepository;
@@ -26,7 +26,7 @@ class PetServiceTest {
     private PetMapper petMapper;
 
     @InjectMocks
-    private PetService petService;
+    private PetServiceImpl petServiceImpl;
 
     @BeforeEach
     void setUp() {
@@ -41,7 +41,7 @@ class PetServiceTest {
         when(petRepository.save(pet)).thenReturn(pet);
         when(petMapper.modelToDto(pet)).thenReturn(petDto);
 
-        PetDto result = petService.savePet(petDto);
+        PetDto result = petServiceImpl.savePet(petDto);
 
         assertNotNull(result);
         verify(petRepository, times(1)).save(pet);
@@ -55,7 +55,7 @@ class PetServiceTest {
         when(petRepository.findById(id)).thenReturn(Optional.of(pet));
         when(petMapper.modelToDto(pet)).thenReturn(petDto);
 
-        PetDto result = petService.getPet(id);
+        PetDto result = petServiceImpl.getPet(id);
 
         assertNotNull(result);
         verify(petRepository, times(1)).findById(id);
@@ -66,7 +66,7 @@ class PetServiceTest {
         Long id = 1L;
         when(petRepository.findById(id)).thenReturn(Optional.empty());
 
-        assertThrows(PetServiceException.class, () -> petService.getPet(id));
+        assertThrows(PetServiceException.class, () -> petServiceImpl.getPet(id));
         verify(petRepository, times(1)).findById(id);
     }
 
@@ -80,7 +80,7 @@ class PetServiceTest {
         when(petRepository.save(pet)).thenReturn(pet);
         when(petMapper.modelToDto(pet)).thenReturn(petDto);
 
-        PetDto result = petService.updatePet(petDto);
+        PetDto result = petServiceImpl.updatePet(petDto);
 
         assertNotNull(result);
         verify(petRepository, times(1)).findById(petDto.getId());
@@ -93,7 +93,7 @@ class PetServiceTest {
         petDto.setId(1L);
         when(petRepository.findById(petDto.getId())).thenReturn(Optional.empty());
 
-        assertThrows(PetServiceException.class, () -> petService.updatePet(petDto));
+        assertThrows(PetServiceException.class, () -> petServiceImpl.updatePet(petDto));
         verify(petRepository, times(1)).findById(petDto.getId());
     }
 
@@ -101,7 +101,7 @@ class PetServiceTest {
     void deletePet() {
         Long id = 1L;
 
-        petService.deletePet(id);
+        petServiceImpl.deletePet(id);
 
         verify(petRepository, times(1)).deleteById(id);
     }
