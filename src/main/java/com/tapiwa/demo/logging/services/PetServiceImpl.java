@@ -3,7 +3,8 @@ package com.tapiwa.demo.logging.services;
 import com.tapiwa.demo.logging.dto.PetDto;
 import com.tapiwa.demo.logging.mappers.PetMapper;
 import com.tapiwa.demo.logging.models.Pet;
-import com.tapiwa.demo.logging.repositories.PetRepository;
+import com.tapiwa.demo.logging.repositories.read.PetReadRepository;
+import com.tapiwa.demo.logging.repositories.write.PetWriteRepository;
 import com.tapiwa.demo.logging.services.exceptions.PetServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,7 +17,10 @@ import java.util.stream.Collectors;
 public class PetServiceImpl implements PetService {
 
     @Autowired
-    private PetRepository petRepository;
+    private PetWriteRepository petWriteRepository;
+
+    @Autowired
+    private PetReadRepository petReadRepository;
 
     @Autowired
     private PetMapper petMapper;
@@ -25,14 +29,14 @@ public class PetServiceImpl implements PetService {
     @Override
     public PetDto savePet(PetDto petDto) {
         Pet pet = petMapper.dtoToModel(petDto);
-        pet = petRepository.save(pet);
+        pet = petWriteRepository.save(pet);
         return petMapper.modelToDto(pet);
     }
 
     @Override
     @Cacheable(value = "petCache")
     public PetDto getPet(Long id) {
-        Pet pet = petRepository.findById(id).orElseThrow(() -> new PetServiceException("Pet not found"));
+        Pet pet = petReadRepository.findById(id).orElseThrow(() -> new PetServiceException("Pet not found"));
         return petMapper.modelToDto(pet);
     }
 
@@ -41,19 +45,19 @@ public class PetServiceImpl implements PetService {
     public PetDto updatePet(PetDto petDto) {
         Pet pet;
         pet = petMapper.dtoToModel(petDto);
-        pet = petRepository.save(pet);
+        pet = petWriteRepository.save(pet);
         return petMapper.modelToDto(pet);
     }
 
 
     @Override
     public void deletePet(Long id) {
-        petRepository.deleteById(id);
+        petWriteRepository.deleteById(id);
     }
 
     @Override
     public List<PetDto> getAllPets() {
 
-         return petRepository.findAll().stream().map(petMapper::modelToDto).collect(Collectors.toList());
+         return petWriteRepository.findAll().stream().map(petMapper::modelToDto).collect(Collectors.toList());
     }
 }
