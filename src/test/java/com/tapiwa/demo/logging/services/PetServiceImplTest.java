@@ -3,6 +3,7 @@ package com.tapiwa.demo.logging.services;
 import com.tapiwa.demo.logging.dto.PetDto;
 import com.tapiwa.demo.logging.mappers.PetMapper;
 import com.tapiwa.demo.logging.models.Pet;
+import com.tapiwa.demo.logging.repositories.read.PetReadRepository;
 import com.tapiwa.demo.logging.repositories.write.PetWriteRepository;
 import com.tapiwa.demo.logging.services.exceptions.PetServiceException;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +22,9 @@ class PetServiceImplTest {
 
     @Mock
     private PetWriteRepository petWriteRepository;
+
+    @Mock
+    PetReadRepository petReadRepository;
 
     @Mock
     private PetMapper petMapper;
@@ -52,22 +56,22 @@ class PetServiceImplTest {
         Long id = 1L;
         Pet pet = new Pet();
         PetDto petDto = new PetDto();
-        when(petWriteRepository.findById(id)).thenReturn(Optional.of(pet));
+        when(petReadRepository.findById(id)).thenReturn(Optional.of(pet));
         when(petMapper.modelToDto(pet)).thenReturn(petDto);
 
         PetDto result = petServiceImpl.getPet(id);
 
         assertNotNull(result);
-        verify(petWriteRepository, times(1)).findById(id);
+        verify(petReadRepository, times(1)).findById(id);
     }
 
     @Test
     void getPet_NotFound() {
         Long id = 1L;
-        when(petWriteRepository.findById(id)).thenReturn(Optional.empty());
+        when(petReadRepository.findById(id)).thenReturn(Optional.empty());
 
         assertThrows(PetServiceException.class, () -> petServiceImpl.getPet(id));
-        verify(petWriteRepository, times(1)).findById(id);
+        verify(petReadRepository, times(1)).findById(id);
     }
 
     @Test
@@ -75,15 +79,15 @@ class PetServiceImplTest {
         PetDto petDto = new PetDto();
         petDto.setId(1L);
         Pet pet = new Pet();
-        when(petWriteRepository.findById(petDto.getId())).thenReturn(Optional.of(pet));
+
         when(petMapper.dtoToModel(petDto)).thenReturn(pet);
         when(petWriteRepository.save(pet)).thenReturn(pet);
         when(petMapper.modelToDto(pet)).thenReturn(petDto);
-
+        when(petReadRepository.findById(petDto.getId())).thenReturn(Optional.of(pet));
         PetDto result = petServiceImpl.updatePet(petDto);
 
         assertNotNull(result);
-        verify(petWriteRepository, times(1)).findById(petDto.getId());
+
         verify(petWriteRepository, times(1)).save(pet);
     }
 
@@ -91,10 +95,10 @@ class PetServiceImplTest {
     void updatePet_NotFound() {
         PetDto petDto = new PetDto();
         petDto.setId(1L);
-        when(petWriteRepository.findById(petDto.getId())).thenReturn(Optional.empty());
+        when(petReadRepository.findById(petDto.getId())).thenReturn(Optional.empty());
 
         assertThrows(PetServiceException.class, () -> petServiceImpl.updatePet(petDto));
-        verify(petWriteRepository, times(1)).findById(petDto.getId());
+        verify(petReadRepository, times(1)).findById(petDto.getId());
     }
 
     @Test

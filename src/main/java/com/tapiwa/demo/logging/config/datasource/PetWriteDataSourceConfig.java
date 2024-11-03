@@ -34,6 +34,7 @@ public class PetWriteDataSourceConfig {
                 .url("jdbc:postgresql://localhost:5432/postgres")
                 .username("user")
                 .password("password")
+                .driverClassName("org.postgresql.Driver")
                 .build();
     }
 

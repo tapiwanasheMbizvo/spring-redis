@@ -53,59 +53,6 @@ services:
     depends_on:
       - postgres_primary
 
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-      - "6379:6379"
-    volumes:
-      - redis-data:/data
-    healthcheck:
-      test: [ "CMD", "redis-cli", "ping" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    networks:
-      - app-network
-
-  redisinsight:
-    image: redislabs/redisinsight:latest
-    container_name: redisinsight
-    ports:
-      - "5540:5540"
-    depends_on:
-      - redis
-    networks:
-      - app-network
-
-  springboot-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: springboot-app
-    ports:
-      - "9091:8080"
-    healthcheck:
-      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:8080/actuator/health" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    depends_on:
-      - postgres_primary
-      - postgres_replica
-      - redis
-    environment:
-      SPRING_DATASOURCE_PRIMARY_URL: jdbc:postgresql://postgres_primary:5432/learn
-      SPRING_DATASOURCE_PRIMARY_USERNAME: user
-      SPRING_DATASOURCE_PRIMARY_PASSWORD: password
-      SPRING_DATASOURCE_REPLICA_URL: jdbc:postgresql://postgres_replica:5433/learn
-      SPRING_DATASOURCE_REPLICA_USERNAME: user
-      SPRING_DATASOURCE_REPLICA_PASSWORD: password
-      SPRING_REDIS_HOST: redis
-      SPRING_REDIS_PORT: 6379
-    networks:
-      - app-network
-
 
 volumes:
   redis-data:

@@ -7,7 +7,6 @@ import com.tapiwa.demo.logging.repositories.read.PetReadRepository;
 import com.tapiwa.demo.logging.repositories.write.PetWriteRepository;
 import com.tapiwa.demo.logging.services.exceptions.PetServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +33,6 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    @Cacheable(value = "petCache")
     public PetDto getPet(Long id) {
         Pet pet = petReadRepository.findById(id).orElseThrow(() -> new PetServiceException("Pet not found"));
         return petMapper.modelToDto(pet);
@@ -43,7 +41,7 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public PetDto updatePet(PetDto petDto) {
-        Pet pet;
+        Pet pet=  petReadRepository.findById(petDto.getId()).orElseThrow(() -> new PetServiceException("Pet not found"));
         pet = petMapper.dtoToModel(petDto);
         pet = petWriteRepository.save(pet);
         return petMapper.modelToDto(pet);
@@ -58,6 +56,6 @@ public class PetServiceImpl implements PetService {
     @Override
     public List<PetDto> getAllPets() {
 
-         return petWriteRepository.findAll().stream().map(petMapper::modelToDto).collect(Collectors.toList());
+         return petReadRepository.findAll().stream().map(petMapper::modelToDto).collect(Collectors.toList());
     }
 }
