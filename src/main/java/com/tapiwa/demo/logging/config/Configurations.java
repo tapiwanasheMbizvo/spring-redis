@@ -35,8 +35,9 @@ public class Configurations {
     @Bean
     public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
         return (builder) -> builder
-                .withCacheConfiguration("petCache",
-                        RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(10)));
+                .withCacheConfiguration("countriesCache", RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(5)))
+                .withCacheConfiguration("countryCache", RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(30)))
+                .withCacheConfiguration("petCache", RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofMinutes(10)));
 
 
     }

@@ -5,7 +5,7 @@ COPY pom.xml .
 COPY src ./src
 RUN mvn clean package -DskipTests
 
-# Use the JAR in a lightweight image
+
 FROM openjdk:17-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
