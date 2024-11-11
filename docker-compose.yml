@@ -1,29 +1,21 @@
 services:
-  redis:
-    image: redis:latest
-    container_name: redis
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
     ports:
-      - "6379:6379"
+      - 5672:5672
+      - 15672:15672
     volumes:
-      - redis-data:/data
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
       interval: 30s
       timeout: 10s
       retries: 3
     networks:
       - app-network
-
-  redisinsight:
-    image: redislabs/redisinsight:latest
-    container_name: redisinsight
-    ports:
-      - "5540:5540"
-    depends_on:
-      - redis
-    networks:
-      - app-network
-
   postgres:
     image: postgres:latest
     container_name: postgres
@@ -31,6 +23,7 @@ services:
       POSTGRES_DB: learn
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: admin
+      SPRING_AMQP_DESERIALIZATION_TRUST_ALL: true
     ports:
       - "5432:5432"
     volumes:
@@ -58,7 +51,7 @@ services:
       retries: 3
     depends_on:
       - postgres
-      - redis
+      - rabbitmq
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/learn
       SPRING_DATASOURCE_USERNAME: admin

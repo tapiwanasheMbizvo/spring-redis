@@ -12,6 +12,11 @@ create table _employees
     salary numeric(10, 2)
 );
 
+create table _mq_messages
+(
+    id varchar(255) primary key,
+    content text
+);
 insert into _pets(name) values
 ('Bruno'),
 ('King Kong'),

@@ -1,7 +1,7 @@
 package com.tapiwa.demo.logging.controllers;
 
 import com.tapiwa.demo.logging.dto.PetDto;
-import com.tapiwa.demo.logging.services.PetServiceImpl;
+import com.tapiwa.demo.logging.services.impl.PetServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

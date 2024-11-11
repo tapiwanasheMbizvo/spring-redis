@@ -5,6 +5,7 @@ import com.tapiwa.demo.logging.mappers.PetMapper;
 import com.tapiwa.demo.logging.models.Pet;
 import com.tapiwa.demo.logging.repositories.PetRepository;
 import com.tapiwa.demo.logging.services.exceptions.PetServiceException;
+import com.tapiwa.demo.logging.services.impl.PetServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

@@ -2,9 +2,9 @@ package com.tapiwa.demo.logging.mappers;
 
 import com.tapiwa.demo.logging.dto.PetDto;
 import com.tapiwa.demo.logging.models.Pet;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class PetMapper {
 
    public PetDto modelToDto(Pet pet) {

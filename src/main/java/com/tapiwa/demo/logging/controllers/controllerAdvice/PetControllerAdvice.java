@@ -2,7 +2,6 @@ package com.tapiwa.demo.logging.controllers.controllerAdvice;
 
 import com.tapiwa.demo.logging.controllers.response.HttpResponse;
 import com.tapiwa.demo.logging.services.exceptions.PetServiceException;
-import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -24,12 +23,5 @@ public class PetControllerAdvice {
                 .build());
     }
 
-    @ExceptionHandler(RedisConnectionFailureException.class)
-    public ResponseEntity<HttpResponse> handleRedisConnectionFailureException(RedisConnectionFailureException ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(HttpResponse.builder()
-                .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-                .message("Redis connection failure")
-                .localDateTime(LocalDateTime.now())
-                .build());
-    }
+
 }
