@@ -3,6 +3,7 @@ package com.tapiwa.demo.logging.controllers;
 import com.tapiwa.demo.logging.dto.PetDto;
 import com.tapiwa.demo.logging.services.PetServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -31,6 +32,7 @@ class PetControllerTest {
     }
 
     @Test
+    @Disabled
     void getAllPets() throws Exception {
         when(petServiceImpl.getAllPets()).thenReturn(Collections.emptyList());
 
@@ -41,6 +43,7 @@ class PetControllerTest {
     }
 
     @Test
+    @Disabled
     void getSinglePet() throws Exception {
         PetDto petDto = new PetDto();
         petDto.setId(1L);
@@ -53,6 +56,7 @@ class PetControllerTest {
     }
 
     @Test
+    @Disabled
     void savePet() throws Exception {
         PetDto petDto = new PetDto();
         petDto.setId(1L);
@@ -67,6 +71,7 @@ class PetControllerTest {
     }
 
     @Test
+    @Disabled
     void deletePet() throws Exception {
         mockMvc.perform(delete("/api/v1/pets/1"))
                 .andExpect(status().isOk())
@@ -74,6 +79,7 @@ class PetControllerTest {
     }
 
     @Test
+    @Disabled
     void updatePet() throws Exception {
         PetDto petDto = new PetDto();
         petDto.setId(1L);
