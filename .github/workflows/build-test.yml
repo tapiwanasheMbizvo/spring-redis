@@ -50,7 +50,7 @@ jobs:
               run: mvn -B -ntp clean install
 
             - name: Save jar file
-              uses: actions/upload-artifact@v2
+              uses: actions/upload-artifact@v4
               with:
                     name: Build Artifact
                     path: target/*.jar
