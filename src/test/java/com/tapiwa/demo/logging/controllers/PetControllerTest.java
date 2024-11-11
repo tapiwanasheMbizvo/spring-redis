@@ -1,7 +1,7 @@
 package com.tapiwa.demo.logging.controllers;
 
 import com.tapiwa.demo.logging.dto.PetDto;
-import com.tapiwa.demo.logging.services.PetService;
+import com.tapiwa.demo.logging.services.PetServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,16 +23,16 @@ class PetControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private PetService petService;
+    private PetServiceImpl petServiceImpl;
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new PetController(petService)).build();
+        mockMvc = MockMvcBuilders.standaloneSetup(new PetController(petServiceImpl)).build();
     }
 
     @Test
     void getAllPets() throws Exception {
-        when(petService.getAllPets()).thenReturn(Collections.emptyList());
+        when(petServiceImpl.getAllPets()).thenReturn(Collections.emptyList());
 
         mockMvc.perform(get("/api/v1/pets"))
                 .andExpect(status().isOk())
@@ -44,7 +44,7 @@ class PetControllerTest {
     void getSinglePet() throws Exception {
         PetDto petDto = new PetDto();
         petDto.setId(1L);
-        when(petService.getPet(1L)).thenReturn(petDto);
+        when(petServiceImpl.getPet(1L)).thenReturn(petDto);
 
         mockMvc.perform(get("/api/v1/pets/1"))
                 .andExpect(status().isOk())
@@ -56,11 +56,11 @@ class PetControllerTest {
     void savePet() throws Exception {
         PetDto petDto = new PetDto();
         petDto.setId(1L);
-        when(petService.savePet(petDto)).thenReturn(petDto);
+        when(petServiceImpl.savePet(petDto)).thenReturn(petDto);
 
         mockMvc.perform(post("/api/v1/pets")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"id\":1}"))
+                        .content("{\"id\":1}, {\"name\":\"Dog\"}"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.message").value("Pet saved successfully"))
                 .andExpect(jsonPath("$.data.pet.id").value(1L));
@@ -77,7 +77,7 @@ class PetControllerTest {
     void updatePet() throws Exception {
         PetDto petDto = new PetDto();
         petDto.setId(1L);
-        when(petService.updatePet(petDto)).thenReturn(petDto);
+        when(petServiceImpl.updatePet(petDto)).thenReturn(petDto);
 
         mockMvc.perform(put("/api/v1/pets")
                         .contentType(MediaType.APPLICATION_JSON)

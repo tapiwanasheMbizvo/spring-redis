@@ -1,0 +1,57 @@
+name: Build and Test
+
+on:
+    push:
+        branches:
+        - with-github-actions
+    pull_request:
+        branches:
+        - with-github-actions
+
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+
+        services:
+            postgres:
+                image: postgres:latest
+                env:
+                    POSTGRES_USER: learn
+                    POSTGRES_PASSWORD: admin
+                    POSTGRES_DB: admin
+                ports:
+                    - 5432:5432
+                options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+            redis:
+                image: redis:latest
+                ports:
+                    - 6379:6379
+                options: --health-cmd "redis-cli ping" --health-interval 10s --health-timeout 5s --health-retries 5
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Set up JDK 11
+              uses: actions/setup-java@v1
+              with:
+                distribution: 'adopt'
+                java-version: 11
+
+            - name: Cache Maven packages
+              uses: actions/cache@v2
+              with:
+                  path: ~/.m2
+                  key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+                  restore-keys: ${{ runner.os }}-maven
+
+            - name: Wait for Postgres to be ready
+              run: while ! pg_isready -h localhost -U learn; do sleep 5; done
+
+            - name: Wait for Redis to be ready
+              run: while ! redis-cli ping; do sleep 5; done
+
+            - name: Set up maven
+              run: mvn -B -ntp clean install
