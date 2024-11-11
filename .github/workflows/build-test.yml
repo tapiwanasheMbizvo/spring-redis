@@ -46,5 +46,11 @@ jobs:
               run: while ! pg_isready -h localhost -U learn; do sleep 5; done
 
 
-            - name: Set up maven
+            - name: Run maven
               run: mvn -B -ntp clean install
+
+            - name: Save jar file
+              uses: actions/upload-artifact@v2
+              with:
+                    name: Build Artifact
+                    path: target/*.jar
