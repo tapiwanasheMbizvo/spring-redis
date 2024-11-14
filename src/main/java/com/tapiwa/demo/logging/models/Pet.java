@@ -11,6 +11,6 @@ public class Pet {
     @Id
     private Long id;
     private String name;
-    private Long ownerId;
+    private String ownerId;
 
 }

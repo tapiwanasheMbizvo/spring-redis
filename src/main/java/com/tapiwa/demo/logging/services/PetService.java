@@ -14,4 +14,6 @@ public interface PetService {
      void deletePet(Long id);
 
      List<PetDto> getAllPets();
+
+    List<PetDto> getAllPetsForUser(String id);
 }

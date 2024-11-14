@@ -56,4 +56,9 @@ public class PetServiceImpl implements PetService {
 
          return petRepository.findAll().stream().map(petMapper::modelToDto).collect(Collectors.toList());
     }
+
+    @Override
+    public List<PetDto> getAllPetsForUser(String id) {
+        return petRepository.findByOwnerId(id).stream().map(petMapper::modelToDto).collect(Collectors.toList());
+    }
 }

@@ -29,8 +29,11 @@ public class PetController {
     @GetMapping
     public ResponseEntity<HttpResponse> getAllPets(@AuthenticationPrincipal Jwt jwt) {
         log.info("Hello, {}!", jwt.getClaimAsString("preferred_username"));
+        String userId = jwt.getClaimAsString("sub");
+
+        log.info("User id: {}", userId);
         log.info("Fetching all pets");
-        List<PetDto> pets = petService.getAllPets();
+        List<PetDto> pets = petService.getAllPetsForUser(userId);
         return ResponseEntity.ok(HttpResponse
                 .builder()
                 .httpStatus(HttpStatus.OK)
@@ -55,8 +58,12 @@ public class PetController {
     }
 
     @PostMapping
-    public ResponseEntity<HttpResponse> savePet(@RequestBody PetDto petDto) {
+    public ResponseEntity<HttpResponse> savePet(@RequestBody PetDto petDto,
+                                                @AuthenticationPrincipal Jwt jwt) {
         log.info("Saving pet: {}", petDto);
+        String userId = jwt.getClaimAsString("sub");
+
+        petDto.setOwnerId(userId);
         PetDto pet = petService.savePet(petDto);
         return ResponseEntity.ok(HttpResponse
                 .builder()

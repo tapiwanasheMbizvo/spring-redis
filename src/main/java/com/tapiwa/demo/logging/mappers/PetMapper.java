@@ -10,6 +10,7 @@ public class PetMapper {
    public PetDto modelToDto(Pet pet) {
         PetDto petDto = new PetDto();
         petDto.setId(pet.getId());
+        petDto.setOwnerId(pet.getOwnerId());
         petDto.setName(pet.getName());
         return petDto;
     }
@@ -17,6 +18,7 @@ public class PetMapper {
     public Pet dtoToModel(PetDto petDto) {
         Pet pet = new Pet();
         pet.setId(petDto.getId());
+        pet.setOwnerId(petDto.getOwnerId());
         pet.setName(petDto.getName());
         return pet;
     }
