@@ -16,8 +16,6 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 public class SecurityConfig {
 
-    String jwkSetUri = "http://localhost:8089/realms/petApp/protocol/openid-connect/certs";
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
