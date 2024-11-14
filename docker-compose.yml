@@ -24,26 +24,6 @@ services:
     networks:
       - app-network
 
-  postgres:
-    image: postgres:latest
-    container_name: postgres
-    environment:
-      POSTGRES_DB: learn
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-      - ./00_init.sql:/docker-entrypoint-initdb.d/00_init.sql
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U admin"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    networks:
-      - app-network
-
   springboot-app:
     build:
       context: .
@@ -57,10 +37,9 @@ services:
       timeout: 10s
       retries: 3
     depends_on:
-      - postgres
       - redis
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/learn
+      SPRING_DATASOURCE_URL: jdbc:postgresql://10.0.0.191:5432/learn
       SPRING_DATASOURCE_USERNAME: admin
       SPRING_DATASOURCE_PASSWORD: admin
       SPRING_REDIS_HOST: redis

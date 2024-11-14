@@ -6,6 +6,8 @@ import com.tapiwa.demo.logging.services.PetService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -14,7 +16,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("api/v1/pets")
+@RequestMapping("/pets")
 public class PetController {
 
     private final PetService petService;
@@ -25,8 +27,8 @@ public class PetController {
 
 
     @GetMapping
-    public ResponseEntity<HttpResponse> getAllPets() {
-
+    public ResponseEntity<HttpResponse> getAllPets(@AuthenticationPrincipal Jwt jwt) {
+        log.info("Hello, {}!", jwt.getClaimAsString("preferred_username"));
         log.info("Fetching all pets");
         List<PetDto> pets = petService.getAllPets();
         return ResponseEntity.ok(HttpResponse
