@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://10.0.0.191:5432/learn
+    url: jdbc:postgresql://localhost:5432/learn
     username: admin
     password: admin
     driver-class-name: org.postgresql.Driver
@@ -15,8 +15,8 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://10.0.0.191:8089/realms/petApp
-          jwk-set-uri: http://10.0.0.191:8089/realms/petApp/protocol/openid-connect/certs
+          issuer-uri: http://localhost:8089/realms/petApp
+          jwk-set-uri: http://localhost:8089/realms/petApp/protocol/openid-connect/certs
 
 logging:
   level:
